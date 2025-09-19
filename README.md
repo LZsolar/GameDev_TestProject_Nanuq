@@ -15,3 +15,5 @@ break down task
    - every adjustable data can be adjust from here
 
 Decide to use PrimeTween to help with bird rotating/UI animation because it's in allow list and similar to DOTween(Less time to learn)
+== Devlog ==
+- make it exist first, scrub it later
