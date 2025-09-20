@@ -67,7 +67,7 @@ public class GameManager : MonoBehaviour
         DuringGame.SetActive(false);
         EndMenu.SetActive(true);
     }
-    private void setUIhighscore()
+    public void setUIhighscore()
     {
         MainMenu.SetActive(false);
         ScoreMenu.SetActive(true);

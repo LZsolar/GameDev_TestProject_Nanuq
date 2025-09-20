@@ -4,6 +4,7 @@ public class DestroyPoint : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        print("TRIG");
         Destroy(collision.gameObject);
     }
 }

@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] private InputActionReference _inputPress;
     [SerializeField] private Rigidbody2D _rigidbody;
-    [SerializeField] private Collider2D _collider;
+    [SerializeField] private SpriteRenderer playersprite;
+    [SerializeField] private List<Sprite> playerSpritesList;
 
     private float _JumpForce;
     private void Awake()
@@ -42,12 +44,14 @@ public class PlayerController : MonoBehaviour
     {
         this.transform.position = new Vector3(-1f,0,0);
         _rigidbody.gravityScale = 0;
+        playersprite.sprite = playerSpritesList[0];
     }
     public void OnGameEnd()
     {
         _inputPress.action.Disable();
         _inputPress.action.performed -= OnInput;
         _inputPress.action.canceled -= OnInput;
+        playersprite.sprite = playerSpritesList[1];
     }
 
     
