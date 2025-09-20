@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 using UnityEngine.Events;
+using System.Collections.Generic;
 
 public enum GameState
 {
@@ -7,6 +9,15 @@ public enum GameState
     Start,
     End
 }
+[Serializable]
+public struct GameDifficulty
+{
+    public int ScoreToTrigger;
+    public float PipeSpawnRange;
+    public float PipeSpeed;
+    public float PipeSpawnInterval;
+}
+
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
@@ -20,15 +31,17 @@ public class GameManager : MonoBehaviour
 
 
     [Header("CONFIG")]
-    [SerializeField] private PlayerController _PlayerController;
     [SerializeField] public float PlayerJumpForce;
     [SerializeField] public float PlayerGravity;
-    [SerializeField] public float PipeSpeed;
-    [SerializeField] public float PipeSpawnInterval;
+ 
+    [SerializeField] List<GameDifficulty> _gameDifficulty;
+    int currentGameDifficulty=0;
 
     public GameState currentGameState { get; private set; }
 
     public static event System.Action<GameState> OnGameStateChanged;
+    public static event System.Action<GameDifficulty> OnGameDifficultyChanged;
+
 
     private void Awake()
     {
@@ -49,11 +62,27 @@ public class GameManager : MonoBehaviour
 
         switch (state)
         {
-            case GameState.Start: setUIonGameStart(); return;
-            case GameState.End: setUIonGameEnd();ScoreManager.Instance.resetScore(); return;
+            case GameState.Start: 
+                setUIonGameStart();
+                currentGameDifficulty = 0;
+                ToggleGameDifficulty(0);
+                return;
+            case GameState.End: 
+                setUIonGameEnd();
+                ScoreManager.Instance.resetScore(); 
+                return;
             default: setUImainmenu(); return;
         }
     }
+    public void ToggleGameDifficulty(int currentScore)
+    {
+        if (_gameDifficulty.Count <= currentGameDifficulty+1) { return; }
+        if (currentScore < _gameDifficulty[currentGameDifficulty].ScoreToTrigger) { return; }
+
+        currentGameDifficulty += 1;
+        OnGameDifficultyChanged?.Invoke(_gameDifficulty[currentGameDifficulty]);
+    }
+
     public void clickToStartGame(){ToggleGameState(GameState.Start); }
     public void clickToRestartGame(){ToggleGameState(GameState.Waiting); }
 

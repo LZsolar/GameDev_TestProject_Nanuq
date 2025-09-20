@@ -4,13 +4,14 @@ using System.Collections;
 public class PipeSpawner : MonoBehaviour
 {
     public GameObject Pipe;
-    public float gapSize = 3.0f;
+    public float spawnRange;
     public float spawnInterval;
-    public float destroyDistance = 10.0f;
+    public float pipemovespeed;
 
     private void Awake()
     {
         GameManager.OnGameStateChanged += HandleGameState;
+        GameManager.OnGameDifficultyChanged += HandleDifficultyChange;
     }
 
     private void HandleGameState(GameState state)
@@ -22,8 +23,16 @@ public class PipeSpawner : MonoBehaviour
             default: DestroyPipe(); return;
         }
     }
+
+    private void HandleDifficultyChange(GameDifficulty data)
+    {
+        spawnRange = data.PipeSpawnRange;
+        spawnInterval = data.PipeSpawnInterval;
+        pipemovespeed = data.PipeSpeed;
+    }
+
+
     private void startPipeSpawing() {
-        spawnInterval = GameManager.Instance.PipeSpawnInterval;
         StartCoroutine(SpawnPipe()); 
     }
     private void stopPipeSpawing() { StopAllCoroutines(); }
@@ -32,8 +41,9 @@ public class PipeSpawner : MonoBehaviour
     {
         while (true)
         {
-            Vector3 spawnPos = transform.position + new Vector3(0, Random.Range(-gapSize, gapSize), 0);
+            Vector3 spawnPos = transform.position + new Vector3(0, Random.Range(-spawnRange, spawnRange), 0);
             GameObject pipe = Instantiate(Pipe, spawnPos, Quaternion.identity);
+            pipe.GetComponent<PipeMovement>().setMoveSpeed(pipemovespeed);
             yield return new WaitForSeconds(spawnInterval);
         }
     }

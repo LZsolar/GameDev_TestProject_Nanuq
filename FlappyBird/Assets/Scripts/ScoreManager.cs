@@ -53,5 +53,6 @@ public class ScoreManager : MonoBehaviour
     {
         _score += 1;
         currentScoreText.text = _score.ToString();
+        GameManager.Instance.ToggleGameDifficulty(_score);
     }
 }
