@@ -15,13 +15,30 @@ break down task
    - every adjustable data can be adjust from here
 
 Decide to use PrimeTween to help with bird rotating/UI animation because it's in allow list and similar to DOTween(Less time to learn)
+
 == Devlog ==
 - make it exist first, scrub it later
+  
 [Add] Gameloop
 - I never use listener before. but I saw it has been use a lot while doing my internship so I want to learn and used too.
 - Decide to use it when GameState change so it easy to handle and more efficiency than make player check if game is start or not every time in Update().
 - Now pipe spawn/player movement can be toggle without need to directly link GameManager in hirechy.
 - Another thing I never use before but learn from my internship, input system. decide to use to in case to handle fute mobile port and reduce using Update() to check if there os any input or not.
 - Yes I want to do anything to reduce using Update() for this project.
+  
 [Add] Score system
 - I found peoples talking about PlayerPref on unity discussion webboard. after looking into it, this is better than my first idea about saving it seperate as .txt since the only thing I want to save is just high score and nothing else.
+  
+[Add] art asset
+- grab a random art stuff form Kenny. Why player is fish? because fish is cool!
+- list of asset taken :
+https://www.kenney.nl/assets/fish-pack
+https://www.kenney.nl/assets/background-elements-redux
+https://www.kenney.nl/assets/simplified-platformer-pack
+https://toffeecraft.itch.io/ui-user-interface-pack-pastel-dream
+https://www.dafont.com/minecraft.font
+
+[Add] Game Difficulty config
+- in GameManager, can now config game difficulty (Change pipe spawn rate, spawn range and move speed).
+- trigger when player score hit target of each difficulty.
+- can easily add or remove difficulty level.
