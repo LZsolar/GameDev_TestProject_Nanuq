@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI")]
     [SerializeField] private GameObject MainMenu;
+    [SerializeField] private GameObject DuringGame;
     [SerializeField] private GameObject EndMenu;
     [SerializeField] private GameObject ScoreMenu;
 
@@ -43,34 +44,35 @@ public class GameManager : MonoBehaviour
     }
     public void ToggleGameState(GameState state)
     {
-        Debug.Log("Current Game State = "+state);
         currentGameState = state;
         OnGameStateChanged?.Invoke(currentGameState);
 
         switch (state)
         {
             case GameState.Start: setUIonGameStart(); return;
-            case GameState.End: setUIonGameEnd(); return;
+            case GameState.End: setUIonGameEnd();ScoreManager.Instance.resetScore(); return;
             default: setUImainmenu(); return;
         }
     }
     public void clickToStartGame(){ToggleGameState(GameState.Start); }
     public void clickToRestartGame(){ToggleGameState(GameState.Waiting); }
 
-    void setUIonGameStart()
+    private void setUIonGameStart()
     {
         MainMenu.SetActive(false);
+        DuringGame.SetActive(true);
     }
-    public void setUIonGameEnd()
+    private void setUIonGameEnd()
     {
+        DuringGame.SetActive(false);
         EndMenu.SetActive(true);
     }
-    public void setUIhighscore()
+    private void setUIhighscore()
     {
         MainMenu.SetActive(false);
         ScoreMenu.SetActive(true);
     }
-    public void setUImainmenu()
+    private void setUImainmenu()
     {
         MainMenu.SetActive(true);
         EndMenu.SetActive(false);

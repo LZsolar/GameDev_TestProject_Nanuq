@@ -2891,6 +2891,7 @@ GameObject:
   - component: {fileID: 2106844534}
   - component: {fileID: 2106844536}
   - component: {fileID: 2106844535}
+  - component: {fileID: 2106844537}
   m_Layer: 0
   m_Name: DestroyPoint
   m_TagString: DestroyPoint
@@ -2907,8 +2908,8 @@ Transform:
   m_GameObject: {fileID: 2106844533}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.3274, y: 0.0649, z: 0}
-  m_LocalScale: {x: 0.68142164, y: 10.231086, z: 1}
+  m_LocalPosition: {x: -18.13, y: -0.18, z: 0}
+  m_LocalScale: {x: 4.097729, y: 15.08369, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 288819123}
@@ -3014,6 +3015,33 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!50 &2106844537
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2106844533}
+  m_BodyType: 2
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &2140793980
 GameObject:
   m_ObjectHideFlags: 0

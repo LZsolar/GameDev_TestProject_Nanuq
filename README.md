@@ -4,7 +4,7 @@ break down task
    - Adjustable Jump force/Gravity
    - Have bird state if alive or dead
    - rotate up if jump, down if fall
-   - gavity and jump work only if gmae start
+   - gavity and jump work only if game start
 2. Pipe movement
    - Adjustable speed/spawn rate/gap size
    - start spawning only if game start and stop immedietly after bird dead
@@ -23,3 +23,5 @@ Decide to use PrimeTween to help with bird rotating/UI animation because it's in
 - Now pipe spawn/player movement can be toggle without need to directly link GameManager in hirechy.
 - Another thing I never use before but learn from my internship, input system. decide to use to in case to handle fute mobile port and reduce using Update() to check if there os any input or not.
 - Yes I want to do anything to reduce using Update() for this project.
+[Add] Score system
+- I found peoples talking about PlayerPref on unity discussion webboard. after looking into it, this is better than my first idea about saving it seperate as .txt since the only thing I want to save is just high score and nothing else.

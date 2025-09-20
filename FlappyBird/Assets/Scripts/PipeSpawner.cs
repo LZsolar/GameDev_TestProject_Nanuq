@@ -3,10 +3,9 @@ using System.Collections;
 
 public class PipeSpawner : MonoBehaviour
 {
-    public GameObject upPipe;
-    public GameObject downPipe;
+    public GameObject Pipe;
     public float gapSize = 3.0f;
-    public float spawnInterval = 2.0f;
+    public float spawnInterval;
     public float destroyDistance = 10.0f;
 
     private void Awake()
@@ -20,22 +19,32 @@ public class PipeSpawner : MonoBehaviour
         {
             case GameState.Start: startPipeSpawing(); return;
             case GameState.End: stopPipeSpawing(); return;
-            default: return;
+            default: DestroyPipe(); return;
         }
     }
-    private void startPipeSpawing() { StartCoroutine(SpawnPipe()); }
+    private void startPipeSpawing() {
+        spawnInterval = GameManager.Instance.PipeSpawnInterval;
+        StartCoroutine(SpawnPipe()); 
+    }
     private void stopPipeSpawing() { StopAllCoroutines(); }
 
     private IEnumerator SpawnPipe()
     {
         while (true)
         {
-            float randomY = Random.Range(-3f, 3.5f);
-            Vector3 downPipePosition = transform.position + new Vector3(0, -gapSize + randomY, 0);
-            Instantiate(downPipe, downPipePosition, Quaternion.identity);
-            GameObject topPipe = Instantiate(upPipe, transform.position + new Vector3(0, gapSize + randomY, 0), Quaternion.identity);
-            topPipe.transform.localScale = new Vector3(1f, -1f, 1f);
+            Vector3 spawnPos = transform.position + new Vector3(0, Random.Range(-gapSize, gapSize), 0);
+            GameObject pipe = Instantiate(Pipe, spawnPos, Quaternion.identity);
             yield return new WaitForSeconds(spawnInterval);
+        }
+    }
+
+    private void DestroyPipe()
+    {
+        GameObject[] pipes = GameObject.FindGameObjectsWithTag("Pipe");
+
+        foreach (GameObject pipe in pipes)
+        {
+            Destroy(pipe);
         }
     }
 }
