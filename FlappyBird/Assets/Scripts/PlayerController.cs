@@ -1,24 +1,33 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
-    public GameManager _gameManager;
-
     [SerializeField] private InputActionReference _inputPress;
     [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private Collider2D _collider;
 
     private float _JumpForce;
-
-    private void Start()
+    private void Awake()
     {
-        OnGameEnd();
+        GameManager.OnGameStateChanged += HandleGameState;
+    }
+
+    private void HandleGameState(GameState state)
+    {
+        switch (state)
+        {
+            case GameState.Start: OnGameStart(); return;
+            case GameState.End: OnGameEnd(); return;
+            default: resetGame(); return;
+        }
     }
 
     void OnInput(InputAction.CallbackContext context)
     {
-        _rigidbody.AddForce(new Vector2(0f,_JumpForce));
+        _rigidbody.linearVelocity = new Vector2(0, 0);
+        _rigidbody.AddForce(_JumpForce * Vector2.up);
     }
 
     public void OnGameStart()
@@ -26,12 +35,12 @@ public class PlayerController : MonoBehaviour
         _inputPress.action.Enable();
         _inputPress.action.performed += OnInput;
         _inputPress.action.canceled += OnInput;
-        _JumpForce = _gameManager._PlayerJumpForce;
-        _rigidbody.gravityScale = _gameManager._PlayerGravity;
+        _JumpForce = GameManager.Instance.PlayerJumpForce;
+        _rigidbody.gravityScale = GameManager.Instance.PlayerGravity;
     }
     public void resetGame()
     {
-        this.transform.position = new Vector3(-3.35f,0,0);
+        this.transform.position = new Vector3(-1f,0,0);
         _rigidbody.gravityScale = 0;
     }
     public void OnGameEnd()
@@ -41,12 +50,5 @@ public class PlayerController : MonoBehaviour
         _inputPress.action.canceled -= OnInput;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.tag == "Obstacle")
-        {
-            _gameManager.ToggleGameState(false);
-            OnGameEnd();
-        }
-    }
+    
 }

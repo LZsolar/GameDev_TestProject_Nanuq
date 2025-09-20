@@ -1,5 +1,12 @@
 using UnityEngine;
+using UnityEngine.Events;
 
+public enum GameState
+{
+    Waiting,
+    Start,
+    End
+}
 public class GameManager : MonoBehaviour
 {
     private static GameManager _instance;
@@ -13,43 +20,50 @@ public class GameManager : MonoBehaviour
 
     [Header("CONFIG")]
     [SerializeField] private PlayerController _PlayerController;
-    [SerializeField] private float PlayerJumpForce;
-    [SerializeField] private float PlayerGravity;
-    [SerializeField] private float PipeSpeed;
-    [SerializeField] private float PipeSpawnInterval;
-    public float _PlayerJumpForce => PlayerJumpForce;
-    public float _PlayerGravity => PlayerGravity;
-    public float _PipeSpeed => PipeSpeed;
-    public float _PipeSpawnInterval => PipeSpawnInterval;
+    [SerializeField] public float PlayerJumpForce;
+    [SerializeField] public float PlayerGravity;
+    [SerializeField] public float PipeSpeed;
+    [SerializeField] public float PipeSpawnInterval;
 
-    [SerializeField] private bool CurrentGameState = false;
+    public GameState currentGameState { get; private set; }
 
+    public static event System.Action<GameState> OnGameStateChanged;
 
-    private void OnEnable()
+    private void Awake()
     {
-        setUImainmenu();
-    }
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _instance = this;
+        DontDestroyOnLoad(gameObject);
 
-    void Update()
-    {
-        
+        ToggleGameState(GameState.Waiting);
     }
-    public void ToggleGameState(bool state)
+    public void ToggleGameState(GameState state)
     {
-        CurrentGameState = state;
-        if(CurrentGameState ) { setUIonGameStart(); }
-        else { setUIonGameEnd(); }
+        Debug.Log("Current Game State = "+state);
+        currentGameState = state;
+        OnGameStateChanged?.Invoke(currentGameState);
+
+        switch (state)
+        {
+            case GameState.Start: setUIonGameStart(); return;
+            case GameState.End: setUIonGameEnd(); return;
+            default: setUImainmenu(); return;
+        }
     }
+    public void clickToStartGame(){ToggleGameState(GameState.Start); }
+    public void clickToRestartGame(){ToggleGameState(GameState.Waiting); }
 
     void setUIonGameStart()
     {
         MainMenu.SetActive(false);
-        _PlayerController.OnGameStart();
     }
     public void setUIonGameEnd()
     {
         EndMenu.SetActive(true);
-        _PlayerController.OnGameEnd();
     }
     public void setUIhighscore()
     {
@@ -61,12 +75,5 @@ public class GameManager : MonoBehaviour
         MainMenu.SetActive(true);
         EndMenu.SetActive(false);
         ScoreMenu.SetActive(false);
-        _PlayerController.resetGame();
-    }
-
-    enum Gamestate
-    {
-        Start,
-        End
     }
 }

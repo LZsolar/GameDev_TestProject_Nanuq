@@ -17,3 +17,9 @@ break down task
 Decide to use PrimeTween to help with bird rotating/UI animation because it's in allow list and similar to DOTween(Less time to learn)
 == Devlog ==
 - make it exist first, scrub it later
+[Add] Gameloop
+- I never use listener before. but I saw it has been use a lot while doing my internship so I want to learn and used too.
+- Decide to use it when GameState change so it easy to handle and more efficiency than make player check if game is start or not every time in Update().
+- Now pipe spawn/player movement can be toggle without need to directly link GameManager in hirechy.
+- Another thing I never use before but learn from my internship, input system. decide to use to in case to handle fute mobile port and reduce using Update() to check if there os any input or not.
+- Yes I want to do anything to reduce using Update() for this project.
