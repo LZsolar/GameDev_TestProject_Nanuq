@@ -42,3 +42,17 @@ https://www.dafont.com/minecraft.font
 - in GameManager, can now config game difficulty (Change pipe spawn rate, spawn range and move speed).
 - trigger when player score hit target of each difficulty.
 - can easily add or remove difficulty level.
+
+[Add] sound effect and fade scene
+- took me around 1-2 hour to get use to PrimeTween, But I able to make screen fade to black while changing menu.
+- I want it to have only script using to play sound so it easier than setting up audiosource to every gameobject that have sound. I seperate SoundManager to it sole script for this purpose.  
+- I also want to make soundsystem better but since it not priority and time limit, this is what I can come up. (if have time, I want to change it to better enum system or maybe dictionary that match audionumber and name for other script to call?)
+- sound credit! https://brainzplayz.itch.io/retro-sounds-32-bit
+
+[Update] refactor
+- rearrange UI code, currently it's too hard-code for changing one scene(to open menu, set this false, set that true) so I write new method to have all the UI close and make it open just what scene I needed.
+- also decide to move UI to seperate script from GameMAnager in case more UI add to this project in future? it will be easier to edit
+- adjust build setting so it not jumpscare with unadjustable full screen after open.
+- Still have time to make fish jumping with tween!
+
+== End of Devlog ==

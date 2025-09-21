@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Events;
 using System.Collections.Generic;
 using UnityEngine.InputSystem.Interactions;
+using PrimeTween;
 
 public class PlayerController : MonoBehaviour
 {
@@ -12,6 +13,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private List<Sprite> playerSpritesList;
 
     private float _JumpForce;
+
+    Sequence playerRotate;
+
+
     private void Awake()
     {
         GameManager.OnGameStateChanged += HandleGameState;
@@ -33,7 +38,7 @@ public class PlayerController : MonoBehaviour
         _rigidbody.AddForce(_JumpForce * Vector2.up);
 
         SoundManager.Instance.playAudio((int)audioName.BirdFly);
-
+        playerRotation();
     }
 
     public void OnGameStart()
@@ -46,9 +51,11 @@ public class PlayerController : MonoBehaviour
     }
     public void resetGame()
     {
-        this.transform.position = new Vector3(-1f,0,0);
+        this.transform.position = new Vector3(-1f, 0, 0);
         _rigidbody.gravityScale = 0;
         playersprite.sprite = playerSpritesList[0];
+        playerRotate.Stop();
+        Tween.Rotation(playersprite.gameObject.transform, new Vector3(0, 0, 0), 0f);
     }
     public void OnGameEnd()
     {
@@ -58,5 +65,14 @@ public class PlayerController : MonoBehaviour
         playersprite.sprite = playerSpritesList[1];
     }
 
-    
+    void playerRotation()
+    {
+        playerRotate.Stop();
+        playerRotate = Sequence.Create();
+        playerRotate.Chain(Tween.Rotation(playersprite.gameObject.transform,new Vector3(0,0,50), 0));
+        playerRotate.Chain(Tween.Rotation(playersprite.gameObject.transform, new Vector3(0, 0, -50), 2f));
+
+        playerRotate.OnComplete(() => playerRotate.Complete());
+    }
+
 }
