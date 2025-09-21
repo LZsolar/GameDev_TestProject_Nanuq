@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Events;
 using System.Collections.Generic;
+using UnityEngine.InputSystem.Interactions;
 
 public class PlayerController : MonoBehaviour
 {
@@ -30,6 +31,9 @@ public class PlayerController : MonoBehaviour
     {
         _rigidbody.linearVelocity = new Vector2(0, 0);
         _rigidbody.AddForce(_JumpForce * Vector2.up);
+
+        SoundManager.Instance.playAudio((int)audioName.BirdFly);
+
     }
 
     public void OnGameStart()

@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
+using PrimeTween;
+using UnityEngine.UI;
 
 public enum GameState
 {
@@ -28,6 +30,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject DuringGame;
     [SerializeField] private GameObject EndMenu;
     [SerializeField] private GameObject ScoreMenu;
+    [SerializeField] private GameObject Tutorial;
 
 
     [Header("CONFIG")]
@@ -42,6 +45,9 @@ public class GameManager : MonoBehaviour
     public static event System.Action<GameState> OnGameStateChanged;
     public static event System.Action<GameDifficulty> OnGameDifficultyChanged;
 
+    [Header("FOR TWEEN")]
+    [SerializeField] GameObject TitleLogo;
+    [SerializeField] Image fadeBlack;
 
     private void Awake()
     {
@@ -64,31 +70,41 @@ public class GameManager : MonoBehaviour
         {
             case GameState.Start: 
                 setUIonGameStart();
-                currentGameDifficulty = 0;
-                ToggleGameDifficulty(0);
                 return;
             case GameState.End: 
                 setUIonGameEnd();
-                ScoreManager.Instance.resetScore(); 
+                ScoreManager.Instance.resetScore();
+                SoundManager.Instance.playAudio((int)audioName.GameEnd);
                 return;
             default: setUImainmenu(); return;
         }
     }
     public void ToggleGameDifficulty(int currentScore)
     {
-        if (_gameDifficulty.Count <= currentGameDifficulty+1) { return; }
+        if (_gameDifficulty.Count <= currentGameDifficulty) { return; }
         if (currentScore < _gameDifficulty[currentGameDifficulty].ScoreToTrigger) { return; }
 
-        currentGameDifficulty += 1;
         OnGameDifficultyChanged?.Invoke(_gameDifficulty[currentGameDifficulty]);
+        currentGameDifficulty += 1;
     }
 
-    public void clickToStartGame(){ToggleGameState(GameState.Start); }
+    public void clickToStartGame(){ToggleGameState(GameState.Start);}
     public void clickToRestartGame(){ToggleGameState(GameState.Waiting); }
 
+    public void setUpTutorial()
+    {
+        changeScreen(
+            () => MainMenu.SetActive(false),
+            () => Tutorial.SetActive(true),
+            () => DuringGame.SetActive(true)
+        );
+
+        currentGameDifficulty = 0;
+        ToggleGameDifficulty(0);
+    }
     private void setUIonGameStart()
     {
-        MainMenu.SetActive(false);
+        Tutorial.SetActive(false);
         DuringGame.SetActive(true);
     }
     private void setUIonGameEnd()
@@ -98,13 +114,34 @@ public class GameManager : MonoBehaviour
     }
     public void setUIhighscore()
     {
-        MainMenu.SetActive(false);
-        ScoreMenu.SetActive(true);
+        changeScreen(
+           () => MainMenu.SetActive(false),
+           () => ScoreMenu.SetActive(true)
+        );
     }
     private void setUImainmenu()
     {
-        MainMenu.SetActive(true);
-        EndMenu.SetActive(false);
-        ScoreMenu.SetActive(false);
+        changeScreen(
+           () => MainMenu.SetActive(true),
+           () => EndMenu.SetActive(false),
+           () => ScoreMenu.SetActive(false)
+        );
     }
+
+    private void changeScreen(params Action[] actions)
+    {
+        fadeBlack.gameObject.SetActive(true);
+        Sequence Blackseq = Sequence.Create();
+        Blackseq.Chain(Tween.Alpha(fadeBlack, 1, 0.2f));
+        Blackseq.ChainCallback(() => {
+            foreach (var act in actions)
+                act?.Invoke();
+        });
+        Blackseq.Chain(Tween.Alpha(fadeBlack, 0, 0.2f));
+        Blackseq.ChainCallback(() => {
+            fadeBlack.gameObject.SetActive(false);
+        });
+        Blackseq.OnComplete (()=> Blackseq.Complete());
+    }
+
 }
